@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
+﻿using System.Data;
 
 namespace CPUWinFormsFramework
 {
@@ -15,7 +12,7 @@ namespace CPUWinFormsFramework
             lst.DataBindings.Add("SelectedValue", targetdt, lst.ValueMember, false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
-        public static void SetControlBinding(Control ctrl, DataTable dt)
+        public static void SetControlBinding(Control ctrl, BindingSource bindsource)
         {
             string propertyname = "";
             string controlname = ctrl.Name.ToLower();
@@ -37,7 +34,7 @@ namespace CPUWinFormsFramework
 
             if (propertyname != "" && columname != "")
             {
-                ctrl.DataBindings.Add(propertyname, dt, columname, true, DataSourceUpdateMode.OnPropertyChanged);
+                ctrl.DataBindings.Add(propertyname, bindsource, columname, true, DataSourceUpdateMode.OnPropertyChanged);
             }
 
         }
