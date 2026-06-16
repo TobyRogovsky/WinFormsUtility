@@ -45,5 +45,25 @@ namespace CPUWinFormsFramework
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
+
+        public static bool IsFormOpen(Type formtype, int pkvalue = 0)
+        {
+            bool exists = false;
+            foreach (Form frm in Application.OpenForms)
+            {
+                int frmpkvalue = 0;
+                if(frm.Tag != null && frm.Tag is int)
+                {
+                    frmpkvalue = (int)frm.Tag;
+                }
+                if (frm.GetType() == formtype && frmpkvalue == pkvalue)
+                {
+                    frm.Activate();
+                    exists = true;
+                    break;
+                }
+            }
+            return exists;
+        }
     }
 }
