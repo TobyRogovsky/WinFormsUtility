@@ -29,6 +29,7 @@ namespace CPUWinFormsFramework
                 case "dtp":
                     propertyname = "Value";
                     break;
+                    break;
             }
 
 
@@ -50,19 +51,37 @@ namespace CPUWinFormsFramework
 
         public static void FormatGridForEdit(DataGridView grid, string tablename)
         {
-            DoFormatGrid(grid, tablename);            
-
+            grid.EditMode = DataGridViewEditMode.EditOnEnter;
+            DoFormatGrid(grid, tablename);           
         }
 
         private static void DoFormatGrid(DataGridView grid, string tablename)
         {
             grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             grid.RowHeadersWidth = 25;
+            foreach(DataGridViewColumn col in grid.Columns)
+            {
+                if (col.Name.EndsWith("ID") || col.Name.EndsWith("Id"))
+                {
+                    col.Visible = false;
+                }
+            }
             string pkname = tablename + "ID";
             if (grid.Columns.Contains(pkname))
             {
                 grid.Columns[pkname]!.Visible = false;
             }
+        }
+
+        public static void AddComboBoxToGrid(DataGridView grid, DataTable datasource, string tablename, string displaymemeber)
+        {
+            DataGridViewComboBoxColumn c = new();
+            c.DataSource = datasource;
+            c.DisplayMember = displaymemeber;
+            c.ValueMember = tablename + "Id";
+            c.DataPropertyName = c.ValueMember;
+            c.HeaderText = tablename;
+            grid.Columns.Insert(0, c);
         }
 
         public static bool IsFormOpen(Type formtype, int pkvalue = 0)
