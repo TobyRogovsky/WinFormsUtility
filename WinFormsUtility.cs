@@ -26,11 +26,14 @@ namespace CPUWinFormsFramework
             switch (controltype)
             {
                 case "txt":
-                case "lbl":
+                case "lbl":                
                     propertyname = "Text";
                     break;
                 case "dtp":
                     propertyname = "Value";
+                    break;
+                case "chk":
+                    propertyname = "Checked";
                     break;
                     
             }
