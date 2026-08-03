@@ -7,9 +7,11 @@ namespace CPUWinFormsFramework
     {
         public static void SetListBinding(ComboBox lst, DataTable sourcedt, DataTable? targetdt, string tablename)
         {
+            lst.DataBindings.Clear();
             lst.DataSource = sourcedt;
             lst.ValueMember = tablename + "ID";
             lst.DisplayMember = lst.Name.Substring(3);
+
             if (targetdt != null)
             {
                 lst.DataBindings.Add("SelectedValue", targetdt, lst.ValueMember, false, DataSourceUpdateMode.OnPropertyChanged);
@@ -18,15 +20,17 @@ namespace CPUWinFormsFramework
 
         public static void SetControlBinding(Control ctrl, BindingSource bindsource)
         {
+            ctrl.DataBindings.Clear();
+
             string propertyname = "";
             string controlname = ctrl.Name.ToLower();
             string controltype = controlname.Substring(0, 3);
-            string columname = controlname.Substring(3);
+            string columnname = controlname.Substring(3);
 
             switch (controltype)
             {
                 case "txt":
-                case "lbl":                
+                case "lbl":
                     propertyname = "Text";
                     break;
                 case "dtp":
@@ -35,16 +39,12 @@ namespace CPUWinFormsFramework
                 case "chk":
                     propertyname = "Checked";
                     break;
-                    
             }
 
-
-
-            if (propertyname != "" && columname != "")
+            if (propertyname != "" && columnname != "")
             {
-                ctrl.DataBindings.Add(propertyname, bindsource, columname, true, DataSourceUpdateMode.OnPropertyChanged);
+                ctrl.DataBindings.Add(propertyname, bindsource, columnname, true, DataSourceUpdateMode.OnPropertyChanged);
             }
-
         }
         public static void FormatGridForSearchResult(DataGridView grid, string tablename)
         {
@@ -103,20 +103,25 @@ namespace CPUWinFormsFramework
             return value;
         }
 
-        public static void AddComboBoxToGrid(DataGridView grid, DataTable datasource, string tablename, string displaymemeber)
+        public static void AddComboBoxToGrid(DataGridView grid, DataTable dataSource, string tableName, string displayMember, int columnIndex = 0)
         {
-            DataGridViewComboBoxColumn c = new();
-            c.DataSource = datasource;
-            c.DisplayMember = displaymemeber;
-            c.ValueMember = tablename + "Id";
-            c.DataPropertyName = c.ValueMember;
-            c.HeaderText = tablename;
-            grid.Columns.Insert(0, c);
+            DataGridViewComboBoxColumn column = new();
+            column.Name = tableName;
+            column.DataSource = dataSource;
+            column.DisplayMember = displayMember;
+            column.ValueMember = tableName + "ID";
+            column.DataPropertyName = column.ValueMember;
+            column.HeaderText = tableName;
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            grid.Columns.Insert(columnIndex, column);
         }
 
-        public static void AddDeleteButtonToGrid(DataGridView grid, string deletecolname)
+        public static void AddDeleteButtonToGrid(DataGridView grid, string deleteColumnName)
         {
-            grid.Columns.Add(new DataGridViewButtonColumn() { Text = "X", HeaderText = "Delete", Name = deletecolname, UseColumnTextForButtonValue = true });
+            grid.Columns.Add(new DataGridViewButtonColumn()
+            {
+                Text = "X", HeaderText = "Delete",Name = deleteColumnName,UseColumnTextForButtonValue = true, Width = 60
+            });
         }
 
         public static bool IsFormOpen(Type formtype, int pkvalue = 0)
@@ -164,6 +169,17 @@ namespace CPUWinFormsFramework
                 if (btn.Tag != null && btn.Tag is Form)
                 {
                     ((Form)btn.Tag).Activate();
+                }
+            }
+        }
+
+        public static void HideColumns(DataGridView grid, params string[] colnames)
+        {
+            foreach(string colname in colnames)
+            {
+                if (grid.Columns.Contains(colname))
+                {
+                    grid.Columns[colname]!.Visible = false;
                 }
             }
         }
