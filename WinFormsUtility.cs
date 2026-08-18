@@ -161,6 +161,30 @@ namespace CPUWinFormsFramework
             }
         }
 
+        public static bool IsInteger(TextBox txt, string fieldname)
+        {
+            if (txt.Text != "" && !int.TryParse(txt.Text, out _))
+            {
+                MessageBox.Show(fieldname + " must be a number. Invalid entry.","Invalid Entry", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+
+                txt.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool IsDecimal(TextBox txt, string fieldname)
+        {
+            if (txt.Text != "" && !decimal.TryParse(txt.Text, out _))
+            {
+                MessageBox.Show(fieldname + " must be a number. Invalid entry.","Invalid Entry", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                txt.Focus();
+                return false;            }
+
+            return true;
+        }
+
         private static void Btn_Click(object? sender, EventArgs e)
         {
             if (sender != null && sender is ToolStripButton)
